@@ -27,3 +27,27 @@ export async function getResults() {
   const summary = await sql`SELECT color, COUNT(*) as count FROM votes GROUP BY color`;
   return { votes, summary };
 }
+
+export async function initRallyDB() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS rally (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      member_id VARCHAR(100) NOT NULL UNIQUE,
+      phone VARCHAR(30) NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    )
+  `;
+}
+
+export async function insertRally(name: string, memberId: string, phone: string) {
+  return sql`
+    INSERT INTO rally (name, member_id, phone)
+    VALUES (${name}, ${memberId}, ${phone})
+    ON CONFLICT (member_id) DO UPDATE SET name = ${name}, phone = ${phone}, created_at = NOW()
+  `;
+}
+
+export async function getRally() {
+  return sql`SELECT name, member_id, phone, created_at FROM rally ORDER BY created_at DESC`;
+}

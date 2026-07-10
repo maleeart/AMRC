@@ -141,12 +141,18 @@ export default function VotePage() {
         </form>
       )}
 
-      <div className="mt-8 text-center">
+      <div className="mt-8 space-y-3 text-center">
         <Link
           href="/results"
-          className="inline-flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl text-sm font-medium"
+          className="flex items-center justify-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl text-sm font-medium"
         >
           📊 ดูผลโหวตรวม
+        </Link>
+        <Link
+          href="/rally"
+          className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl text-sm font-medium"
+        >
+          🚗 ลงทะเบียน Rally กฟผ.-วังน้ำเขียว
         </Link>
       </div>
     </main>
