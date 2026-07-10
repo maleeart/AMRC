@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function VotePage() {
@@ -101,9 +102,7 @@ export default function VotePage() {
                     : "border-gray-200 bg-white"
                 }`}
               >
-                <div className="w-16 h-20 rounded-lg bg-white border-2 border-gray-300 shadow-sm mb-3 flex items-center justify-center text-2xl">
-                  👕
-                </div>
+                <Image src="/demo/shirt-white.svg" alt="เสื้อขาว" width={72} height={90} className="mb-3 drop-shadow-sm" />
                 <span className="font-semibold text-gray-800">ขาว</span>
                 {color === "white" && (
                   <div className="absolute top-2 right-2 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">✓</div>
@@ -119,9 +118,7 @@ export default function VotePage() {
                     : "border-gray-200 bg-white"
                 }`}
               >
-                <div className="w-16 h-20 rounded-lg bg-gray-900 border-2 border-gray-700 shadow-sm mb-3 flex items-center justify-center text-2xl">
-                  👕
-                </div>
+                <Image src="/demo/shirt-black.svg" alt="เสื้อดำ" width={72} height={90} className="mb-3 drop-shadow-sm" />
                 <span className="font-semibold text-gray-800">ดำ</span>
                 {color === "black" && (
                   <div className="absolute top-2 right-2 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">✓</div>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" fill="none">
+  <!-- Shirt body -->
+  <path d="M60 40 L20 80 L45 90 L45 190 H155 L155 90 L180 80 L140 40 Q120 55 100 55 Q80 55 60 40Z"
+        fill="#F8F8F8" stroke="#CCCCCC" stroke-width="3" stroke-linejoin="round"/>
+  <!-- Collar left -->
+  <path d="M100 55 Q88 60 80 75 L100 65 Z" fill="#EEEEEE" stroke="#CCCCCC" stroke-width="2"/>
+  <!-- Collar right -->
+  <path d="M100 55 Q112 60 120 75 L100 65 Z" fill="#EEEEEE" stroke="#CCCCCC" stroke-width="2"/>
+  <!-- Sleeve left shadow -->
+  <path d="M20 80 L45 90 L45 80 L30 75 Z" fill="#E0E0E0"/>
+  <!-- Sleeve right shadow -->
+  <path d="M180 80 L155 90 L155 80 L170 75 Z" fill="#E0E0E0"/>
+  <!-- Center button line -->
+  <line x1="100" y1="70" x2="100" y2="185" stroke="#DDDDDD" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <!-- Buttons -->
+  <circle cx="100" cy="90" r="3" fill="#CCCCCC"/>
+  <circle cx="100" cy="115" r="3" fill="#CCCCCC"/>
+  <circle cx="100" cy="140" r="3" fill="#CCCCCC"/>
+  <circle cx="100" cy="165" r="3" fill="#CCCCCC"/>
+</svg>
