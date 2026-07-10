@@ -18,6 +18,7 @@ export default function AdminPage() {
   const [rally, setRally] = useState<Rally[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Vote & Rally>>({});
+  const [editError, setEditError] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -60,18 +61,40 @@ export default function AdminPage() {
   }
 
   async function saveEdit(type: "vote" | "rally") {
+    setEditError("");
     setBusy(true);
-    await fetch(`/api/${type === "vote" ? "vote" : "rally"}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        type === "vote"
-          ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
-          : { name: editData.name, memberId: editData.member_id, phone: editData.phone }
-      ),
-    });
-    setEditing(null);
-    await load();
+    // editing state holds the ORIGINAL member_id as the key
+    const originalMemberId = editing!;
+    const endpoint = type === "vote" ? "vote" : "rally";
+    try {
+      // If member_id changed: delete old row first, then insert new
+      if (editData.member_id !== originalMemberId) {
+        await fetch(`/api/${endpoint}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ memberId: originalMemberId }),
+        });
+      }
+      const body = type === "vote"
+        ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
+        : { name: editData.name, memberId: editData.member_id, phone: editData.phone };
+      const res = await fetch(`/api/${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setEditError(data.error || "เกิดข้อผิดพลาด");
+        setBusy(false);
+        return;
+      }
+      setEditing(null);
+      setEditError("");
+      await load();
+    } catch {
+      setEditError("ไม่สามารถเชื่อมต่อได้");
+    }
     setBusy(false);
   }
 
@@ -177,16 +200,17 @@ export default function AdminPage() {
                       placeholder="เบอร์โทร"
                     />
                   )}
+                  {editError && <p className="text-red-500 text-xs text-center">{editError}</p>}
                   <div className="flex gap-2">
                     <button
                       onClick={() => saveEdit(tab === "votes" ? "vote" : "rally")}
                       disabled={busy}
                       className="flex-1 bg-blue-600 text-white text-sm font-semibold py-2 rounded-lg disabled:opacity-40"
                     >
-                      บันทึก
+                      {busy ? "กำลังบันทึก..." : "บันทึก"}
                     </button>
                     <button
-                      onClick={() => setEditing(null)}
+                      onClick={() => { setEditing(null); setEditError(""); }}
                       className="flex-1 bg-gray-100 text-gray-700 text-sm font-semibold py-2 rounded-lg"
                     >
                       ยกเลิก
