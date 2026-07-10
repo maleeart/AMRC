@@ -121,8 +121,11 @@ export default function RallyPage() {
         </form>
       )}
 
-      <div className="mt-8 text-center">
-        <Link href="/" className="inline-flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl text-sm font-medium">
+      <div className="mt-8 space-y-3 text-center">
+        <Link href="/rally/summary" className="flex items-center justify-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl text-sm font-medium">
+          👥 ดูรายชื่อผู้ลงทะเบียน
+        </Link>
+        <Link href="/" className="flex items-center justify-center gap-2 text-blue-600 text-sm font-medium py-2">
           ← กลับหน้าหลัก
         </Link>
       </div>
