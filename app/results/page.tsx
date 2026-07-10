@@ -26,7 +26,7 @@ export default async function ResultsPage() {
       <div className="text-center mb-6">
         <div className="text-4xl mb-2">📊</div>
         <h1 className="text-xl font-bold text-gray-800">ผลโหวตสีเสื้อ</h1>
-        <p className="text-gray-500 text-sm">ชมรมวิทยุสมัครเล่น AMRC</p>
+        <p className="text-gray-500 text-sm">ชมรมวิทยุสมัครเล่น กฟผ.</p>
       </div>
 
       {/* Summary cards */}
