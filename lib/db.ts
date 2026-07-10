@@ -12,18 +12,19 @@ export async function initDB() {
       created_at TIMESTAMP DEFAULT NOW()
     )
   `;
+  await sql`ALTER TABLE votes ADD COLUMN IF NOT EXISTS size VARCHAR(10)`;
 }
 
-export async function insertVote(name: string, memberId: string, color: string) {
+export async function insertVote(name: string, memberId: string, color: string, size: string) {
   return sql`
-    INSERT INTO votes (name, member_id, color)
-    VALUES (${name}, ${memberId}, ${color})
-    ON CONFLICT (member_id) DO UPDATE SET name = ${name}, color = ${color}, created_at = NOW()
+    INSERT INTO votes (name, member_id, color, size)
+    VALUES (${name}, ${memberId}, ${color}, ${size})
+    ON CONFLICT (member_id) DO UPDATE SET name = ${name}, color = ${color}, size = ${size}, created_at = NOW()
   `;
 }
 
 export async function getResults() {
-  const votes = await sql`SELECT name, member_id, color, created_at FROM votes ORDER BY created_at DESC`;
+  const votes = await sql`SELECT name, member_id, color, size, created_at FROM votes ORDER BY created_at DESC`;
   const summary = await sql`SELECT color, COUNT(*) as count FROM votes GROUP BY color`;
   return { votes, summary };
 }

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "โหวตสีเสื้อ - ชมรมวิทยุสมัครเล่น กฟผ.",
-  description: "ร่วมโหวตสีเสื้อสำหรับกิจกรรมชมรมวิทยุสมัครเล่น",
+  title: "ชมรมวิทยุสมัครเล่น กฟผ. | โหวตเสื้อ & ลงทะเบียน Rally",
+  description: "โหวตสีและไซส์เสื้อ และลงทะเบียนเข้าร่วมกิจกรรม Rally กฟผ.-วังน้ำเขียว ชมรมวิทยุสมัครเล่น กฟผ.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

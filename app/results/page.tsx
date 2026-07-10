@@ -4,7 +4,7 @@ import { getResults } from "../../lib/db";
 export const revalidate = 0;
 
 export default async function ResultsPage() {
-  let votes: { name: string; member_id: string; color: string; created_at: Date }[] = [];
+  let votes: { name: string; member_id: string; color: string; size: string | null; created_at: Date }[] = [];
   let whiteCount = 0;
   let blackCount = 0;
 
@@ -83,15 +83,22 @@ export default async function ResultsPage() {
                   <p className="text-sm font-medium text-gray-800">{v.name}</p>
                   <p className="text-xs text-gray-400">{v.member_id}</p>
                 </div>
-                <span
-                  className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                    v.color === "white"
-                      ? "bg-gray-100 text-gray-700"
-                      : "bg-gray-800 text-white"
-                  }`}
-                >
-                  {v.color === "white" ? "ขาว" : "ดำ"}
-                </span>
+                <div className="flex items-center gap-2">
+                  {v.size && (
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">
+                      {v.size}
+                    </span>
+                  )}
+                  <span
+                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                      v.color === "white"
+                        ? "bg-gray-100 text-gray-700"
+                        : "bg-gray-800 text-white"
+                    }`}
+                  >
+                    {v.color === "white" ? "ขาว" : "ดำ"}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>

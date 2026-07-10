@@ -4,22 +4,41 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+// [code, รอบอก, ความยาวเสื้อ] (นิ้ว)
+const SIZES: [string, number, number][] = [
+  ["SSS", 34, 25],
+  ["SS", 36, 26],
+  ["S", 38, 27],
+  ["M", 40, 28],
+  ["L", 42, 29],
+  ["XL", 44, 30],
+  ["2XL", 46, 31],
+  ["3XL", 48, 32],
+  ["4XL", 50, 33],
+  ["5XL", 52, 34],
+  ["6XL", 54, 35],
+  ["7XL", 56, 36],
+  ["8XL", 58, 37],
+  ["9XL", 60, 38],
+];
+
 export default function VotePage() {
   const [name, setName] = useState("");
   const [memberId, setMemberId] = useState("");
   const [color, setColor] = useState<"white" | "black" | null>(null);
+  const [size, setSize] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!color) return;
+    if (!color || !size) return;
     setStatus("loading");
     try {
       const res = await fetch("/api/vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, memberId, color }),
+        body: JSON.stringify({ name, memberId, color, size }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -28,6 +47,7 @@ export default function VotePage() {
         setName("");
         setMemberId("");
         setColor(null);
+        setSize(null);
       } else {
         setStatus("error");
         setMessage(data.error || "เกิดข้อผิดพลาด");
@@ -40,11 +60,19 @@ export default function VotePage() {
 
   return (
     <main className="max-w-md mx-auto px-4 py-8">
+      {/* Rally CTA - top priority */}
+      <Link
+        href="/rally"
+        className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-4 rounded-xl text-base font-semibold shadow-sm mb-6 active:bg-green-700"
+      >
+        🚗 ลงทะเบียน Rally กฟผ.-วังน้ำเขียว
+      </Link>
+
       {/* Header */}
       <div className="text-center mb-8">
         <div className="text-4xl mb-2">📻</div>
         <h1 className="text-xl font-bold text-gray-800">ชมรมวิทยุสมัครเล่น กฟผ.</h1>
-        <p className="text-gray-500 text-sm mt-1">โหวตสีเสื้อสำหรับกิจกรรม</p>
+        <p className="text-gray-500 text-sm mt-1">โหวตสีและไซส์เสื้อสำหรับกิจกรรม</p>
       </div>
 
       {status === "success" ? (
@@ -127,13 +155,37 @@ export default function VotePage() {
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              เลือกไซส์เสื้อ <span className="text-red-500">*</span>
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {SIZES.map(([code, chest, length]) => (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => setSize(code)}
+                  className={`flex flex-col items-center rounded-xl border-2 py-2 transition-all ${
+                    size === code
+                      ? "border-blue-500 bg-blue-50 shadow-sm"
+                      : "border-gray-200 bg-white"
+                  }`}
+                >
+                  <span className="font-bold text-gray-800">{code}</span>
+                  <span className="text-[11px] text-gray-500">อก {chest}″</span>
+                  <span className="text-[11px] text-gray-500">ยาว {length}″</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {status === "error" && (
             <p className="text-red-500 text-sm text-center">{message}</p>
           )}
 
           <button
             type="submit"
-            disabled={!color || status === "loading"}
+            disabled={!color || !size || status === "loading"}
             className="w-full bg-blue-600 text-white font-semibold py-4 rounded-xl disabled:opacity-40 active:bg-blue-700 text-base"
           >
             {status === "loading" ? "กำลังบันทึก..." : "บันทึกการโหวต"}
@@ -141,18 +193,12 @@ export default function VotePage() {
         </form>
       )}
 
-      <div className="mt-8 space-y-3 text-center">
+      <div className="mt-8 text-center">
         <Link
           href="/results"
           className="flex items-center justify-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl text-sm font-medium"
         >
           📊 ดูผลโหวตรวม
-        </Link>
-        <Link
-          href="/rally"
-          className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl text-sm font-medium"
-        >
-          🚗 ลงทะเบียน Rally กฟผ.-วังน้ำเขียว
         </Link>
       </div>
     </main>
