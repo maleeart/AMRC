@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getResults } from "@/lib/db";
+import { getResults } from "../../lib/db";
 
 export const revalidate = 0;
 

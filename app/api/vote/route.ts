@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initDB, insertVote } from "@/lib/db";
+import { initDB, insertVote } from "../../../lib/db";
 
 export async function POST(req: NextRequest) {
   const { name, memberId, color } = await req.json();
