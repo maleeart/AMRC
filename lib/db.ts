@@ -52,3 +52,13 @@ export async function insertRally(name: string, memberId: string, phone: string)
 export async function getRally() {
   return sql`SELECT name, member_id, phone, created_at FROM rally ORDER BY created_at DESC`;
 }
+
+export async function getRallyCount() {
+  const result = await sql`SELECT COUNT(*) as count FROM rally`;
+  return parseInt((result[0] as { count: string }).count);
+}
+
+export async function isRallyMember(memberId: string) {
+  const result = await sql`SELECT 1 FROM rally WHERE member_id = ${memberId} LIMIT 1`;
+  return result.length > 0;
+}
