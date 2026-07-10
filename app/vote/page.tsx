@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import BackButton from "../components/BackButton";
 
 // [code, รอบอก, ความยาวเสื้อ] (นิ้ว)
 const SIZES: [string, number, number][] = [
@@ -60,9 +61,7 @@ export default function VotePage() {
 
   return (
     <main className="max-w-md mx-auto px-4 py-8 animate-[fadeIn_0.4s_ease]">
-      <Link href="/" className="inline-flex items-center gap-1 text-blue-600 text-sm font-medium mb-4">
-        ← หน้าหลัก
-      </Link>
+      <BackButton />
 
       {/* Header */}
       <div className="text-center mb-8">

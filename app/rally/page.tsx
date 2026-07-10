@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import BackButton from "../components/BackButton";
 
 export default function RallyPage() {
   const [name, setName] = useState("");
@@ -38,7 +39,9 @@ export default function RallyPage() {
   }
 
   return (
-    <main className="max-w-md mx-auto px-4 py-8">
+    <main className="max-w-md mx-auto px-4 py-8 animate-[fadeIn_0.4s_ease]">
+      <BackButton />
+
       {/* Banner */}
       <div className="rounded-2xl overflow-hidden mb-5 shadow-sm">
         <Image
@@ -121,12 +124,9 @@ export default function RallyPage() {
         </form>
       )}
 
-      <div className="mt-8 space-y-3 text-center">
+      <div className="mt-8 text-center">
         <Link href="/rally/summary" className="flex items-center justify-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-xl text-sm font-medium">
           👥 ดูรายชื่อผู้ลงทะเบียน
-        </Link>
-        <Link href="/" className="flex items-center justify-center gap-2 text-blue-600 text-sm font-medium py-2">
-          ← กลับหน้าหลัก
         </Link>
       </div>
     </main>
