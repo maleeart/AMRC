@@ -2,7 +2,6 @@
   "name": "amrc-vote",
   "version": "1.0.0",
   "description": "Amateur Radio Club shirt color voting app",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next dev",
@@ -13,7 +12,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "next": "^16.2.10",
