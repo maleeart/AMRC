@@ -53,6 +53,14 @@ export async function getRally() {
   return sql`SELECT name, member_id, phone, created_at FROM rally ORDER BY created_at DESC`;
 }
 
+export async function deleteVote(memberId: string) {
+  return sql`DELETE FROM votes WHERE member_id = ${memberId}`;
+}
+
+export async function deleteRally(memberId: string) {
+  return sql`DELETE FROM rally WHERE member_id = ${memberId}`;
+}
+
 export async function getRallyCount() {
   const result = await sql`SELECT COUNT(*) as count FROM rally`;
   return parseInt((result[0] as { count: string }).count);

@@ -51,6 +51,11 @@ export default function HomePage() {
           <span className="text-gray-300 group-hover:text-green-500 transition-colors text-xl">→</span>
         </Link>
       </div>
+      <div className="mt-10 text-center">
+        <Link href="/admin" className="text-xs text-gray-300 hover:text-gray-400 transition-colors">
+          ⚙️ ผู้ดูแลระบบ
+        </Link>
+      </div>
     </main>
   );
 }

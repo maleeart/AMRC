@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initRallyDB, insertRally, getRallyCount, isRallyMember } from "../../../lib/db";
+import { initRallyDB, insertRally, getRallyCount, isRallyMember, deleteRally } from "../../../lib/db";
 
 const RALLY_LIMIT = 5;
 
@@ -29,5 +29,17 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "เกิดข้อผิดพลาดในการบันทึก" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const { memberId } = await req.json();
+  if (!memberId) return NextResponse.json({ error: "ไม่พบรหัส" }, { status: 400 });
+  try {
+    await deleteRally(memberId);
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "เกิดข้อผิดพลาด" }, { status: 500 });
   }
 }
