@@ -107,7 +107,7 @@ export default async function ResultsPage() {
 
       <div className="mt-6 text-center">
         <Link
-          href="/"
+          href="/vote"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-medium"
         >
           ← กลับหน้าโหวต
