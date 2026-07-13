@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ชมรมวิทยุสมัครเล่น กฟผ. | โหวตเสื้อ & ลงทะเบียน Rally",
+  title: "ERAC | ชมรมวิทยุสมัครเล่น กฟผ.",
   description: "โหวตสีและไซส์เสื้อ และลงทะเบียนเข้าร่วมกิจกรรม Rally กฟผ.-วังน้ำเขียว ชมรมวิทยุสมัครเล่น กฟผ.",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

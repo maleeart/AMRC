@@ -18,7 +18,7 @@ export default async function HomePage() {
   return (
     <main className="max-w-md mx-auto px-4 py-8 animate-[fadeIn_0.5s_ease]">
       {/* Header image */}
-      <div className="rounded-2xl overflow-hidden shadow-md mb-8">
+      <div className="rounded-2xl overflow-hidden shadow-md mb-6">
         <Image
           src="/header.jpg"
           alt="ชมรมวิทยุสมัครเล่น กฟผ."
@@ -29,9 +29,19 @@ export default async function HomePage() {
         />
       </div>
 
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">ชมรมวิทยุสมัครเล่น กฟผ.</h1>
-        <p className="text-gray-500 text-sm mt-1">เลือกเมนูที่ต้องการ</p>
+      {/* Brand row */}
+      <div className="flex items-center gap-4 mb-8 px-1">
+        <Image
+          src="/icon.svg"
+          alt="ERAC Logo"
+          width={64}
+          height={64}
+          className="rounded-2xl shadow-sm shrink-0"
+        />
+        <div>
+          <h1 className="text-xl font-bold text-gray-800 leading-tight">ชมรมวิทยุสมัครเล่น กฟผ.</h1>
+          <p className="text-xs text-gray-400 mt-0.5 tracking-wide">EGAT Radio Amateur Club · 144.700 MHz</p>
+        </div>
       </div>
 
       {/* Menu */}
