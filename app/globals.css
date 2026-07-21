@@ -4,3 +4,9 @@
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  main { max-width: 100% !important; padding: 16px !important; }
+}

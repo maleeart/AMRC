@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getResults } from "../../lib/db";
+import ExportButton from "./ExportButton";
 
 export const revalidate = 0;
 
@@ -105,7 +106,8 @@ export default async function ResultsPage() {
         )}
       </div>
 
-      <div className="mt-6 text-center">
+      <div className="mt-6 flex justify-center gap-3 no-print">
+        <ExportButton />
         <Link
           href="/vote"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-medium"
