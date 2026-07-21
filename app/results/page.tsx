@@ -49,16 +49,16 @@ export default async function ResultsPage() {
           </div>
         </div>
 
-        <div className="bg-black border-2 border-black rounded-2xl p-4 text-center">
+        <div className="bg-white border-2 border-gray-200 rounded-2xl p-4 text-center">
           <Image src="/demo/shirt-black.svg" alt="เสื้อดำ" width={72} height={90} className="mx-auto mb-2 drop-shadow-sm" />
-          <div className="text-3xl font-bold text-white">{blackCount} คน</div>
-          <div className="text-sm text-gray-400 mt-1">เสื้อดำ</div>
+          <div className="text-3xl font-bold text-gray-800">{blackCount} คน</div>
+          <div className="text-sm text-gray-500 mt-1">เสื้อดำ</div>
           {total > 0 && (
-            <div className="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gray-400 rounded-full" style={{ width: `${(blackCount / total) * 100}%` }} />
+            <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-gray-700 rounded-full" style={{ width: `${(blackCount / total) * 100}%` }} />
             </div>
           )}
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-gray-400 mt-1">
             {total > 0 ? `${Math.round((blackCount / total) * 100)}%` : "0%"}
           </div>
         </div>
