@@ -87,14 +87,13 @@ export default async function HomePage() {
 
       <div className="mt-10 text-center">
         <Link href="/admin" className="text-xs text-gray-300 hover:text-gray-400 transition-colors">
-          ⚙️ ผู้ดูแลระบบ
+          ⚙️ จัดการข้อมูล
         </Link>
       </div>
 
       <div className="mt-8 pt-6 border-t border-gray-100 text-center space-y-0.5">
-        <p className="text-[11px] text-gray-300 font-medium tracking-wide">ผู้ดูแลระบบ</p>
-        <p className="text-[12px] text-gray-400 font-semibold">นายตวงเพชร ชัยยานนท์</p>
-        <p className="text-[10px] text-gray-300">วศ.4 &nbsp;·&nbsp; หบอว-ธ. &nbsp;·&nbsp; กบห-ธ. &nbsp;·&nbsp; ชธธ.</p>
+        <p className="text-[10px] text-gray-300 tracking-wide">นายตวงเพชร ชัยยานนท์</p>
+        <p className="text-[9px] text-gray-300">วศ.4 &nbsp;·&nbsp; หบอว-ธ. &nbsp;·&nbsp; กบห-ธ. &nbsp;·&nbsp; ชธธ.</p>
       </div>
     </main>
   );
