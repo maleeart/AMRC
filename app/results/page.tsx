@@ -24,10 +24,12 @@ export default async function ResultsPage() {
 
   return (
     <main className="max-w-md mx-auto px-4 py-8">
-      <div className="text-center mb-6">
-        <div className="text-4xl mb-2">📊</div>
-        <h1 className="text-xl font-bold text-gray-800">ผลโหวตสีเสื้อ</h1>
-        <p className="text-gray-500 text-sm">ชมรมวิทยุสมัครเล่น กฟผ.</p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-xl font-bold text-gray-800">📊 ผลโหวตสีเสื้อ</h1>
+          <p className="text-gray-500 text-sm">ชมรมวิทยุสมัครเล่น กฟผ.</p>
+        </div>
+        <ExportButton />
       </div>
 
       {/* Summary cards */}
@@ -37,10 +39,7 @@ export default async function ResultsPage() {
           <div className="text-sm text-gray-500 mt-1">เสื้อขาว</div>
           {total > 0 && (
             <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gray-400 rounded-full"
-                style={{ width: `${(whiteCount / total) * 100}%` }}
-              />
+              <div className="h-full bg-gray-400 rounded-full" style={{ width: `${(whiteCount / total) * 100}%` }} />
             </div>
           )}
           <div className="text-xs text-gray-400 mt-1">
@@ -48,15 +47,12 @@ export default async function ResultsPage() {
           </div>
         </div>
 
-        <div className="bg-gray-900 border-2 border-gray-700 rounded-2xl p-4 text-center">
+        <div className="bg-black border-2 border-black rounded-2xl p-4 text-center">
           <div className="text-3xl font-bold text-white">{blackCount}</div>
           <div className="text-sm text-gray-400 mt-1">เสื้อดำ</div>
           {total > 0 && (
-            <div className="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gray-300 rounded-full"
-                style={{ width: `${(blackCount / total) * 100}%` }}
-              />
+            <div className="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gray-400 rounded-full" style={{ width: `${(blackCount / total) * 100}%` }} />
             </div>
           )}
           <div className="text-xs text-gray-500 mt-1">
@@ -69,7 +65,7 @@ export default async function ResultsPage() {
         ผู้โหวตทั้งหมด <span className="font-semibold text-gray-800">{total}</span> คน
       </div>
 
-      {/* Voter list */}
+      {/* Voter list — 2 columns */}
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
           <h2 className="font-semibold text-gray-700 text-sm">รายชื่อผู้โหวต</h2>
@@ -77,41 +73,33 @@ export default async function ResultsPage() {
         {votes.length === 0 ? (
           <p className="text-center text-gray-400 text-sm py-8">ยังไม่มีผู้โหวต</p>
         ) : (
-          <ul className="divide-y divide-gray-50">
+          <div className="grid grid-cols-2 divide-x divide-gray-50">
             {votes.map((v) => (
-              <li key={v.member_id} className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-sm font-medium text-gray-800">{v.name}</p>
-                  <p className="text-xs text-gray-400">{v.member_id}</p>
+              <div key={v.member_id} className="flex items-center justify-between px-3 py-2.5 border-b border-gray-50">
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-800 truncate">{v.name}</p>
+                  <p className="text-[10px] text-gray-400">{v.member_id}</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 ml-1 shrink-0">
                   {v.size && (
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700">
                       {v.size}
                     </span>
                   )}
-                  <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                      v.color === "white"
-                        ? "bg-gray-100 text-gray-700"
-                        : "bg-gray-800 text-white"
-                    }`}
-                  >
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                    v.color === "white" ? "bg-gray-100 text-gray-700" : "bg-black text-white"
+                  }`}>
                     {v.color === "white" ? "ขาว" : "ดำ"}
                   </span>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
 
-      <div className="mt-6 flex justify-center gap-3 no-print">
-        <ExportButton />
-        <Link
-          href="/vote"
-          className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-medium"
-        >
+      <div className="mt-6 text-center no-print">
+        <Link href="/vote" className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-medium">
           ← กลับหน้าโหวต
         </Link>
       </div>

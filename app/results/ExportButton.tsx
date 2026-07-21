@@ -3,9 +3,9 @@ export default function ExportButton() {
   return (
     <button
       onClick={() => window.print()}
-      className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-xl text-sm font-medium"
+      className="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2 rounded-xl text-xs font-medium transition-colors no-print"
     >
-      🖨️ Export / พิมพ์
+      🖨️ Export
     </button>
   );
 }
