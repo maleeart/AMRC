@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getResults } from "../../lib/db";
 import ExportButton from "./ExportButton";
@@ -35,7 +36,8 @@ export default async function ResultsPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-3 mb-6">
         <div className="bg-white border-2 border-gray-200 rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-gray-800">{whiteCount}</div>
+          <Image src="/demo/shirt-white.svg" alt="เสื้อขาว" width={72} height={90} className="mx-auto mb-2 drop-shadow-sm" />
+          <div className="text-3xl font-bold text-gray-800">{whiteCount} คน</div>
           <div className="text-sm text-gray-500 mt-1">เสื้อขาว</div>
           {total > 0 && (
             <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -48,7 +50,8 @@ export default async function ResultsPage() {
         </div>
 
         <div className="bg-black border-2 border-black rounded-2xl p-4 text-center">
-          <div className="text-3xl font-bold text-white">{blackCount}</div>
+          <Image src="/demo/shirt-black.svg" alt="เสื้อดำ" width={72} height={90} className="mx-auto mb-2 drop-shadow-sm" />
+          <div className="text-3xl font-bold text-white">{blackCount} คน</div>
           <div className="text-sm text-gray-400 mt-1">เสื้อดำ</div>
           {total > 0 && (
             <div className="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
