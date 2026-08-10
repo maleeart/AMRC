@@ -61,7 +61,7 @@ export default async function HomePage() {
               <h2 className="font-bold text-gray-850">Ham EGAT: Wave of Friendship</h2>
               <span className="animate-pulse inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
             </div>
-            <p className="text-xs text-blue-600 font-medium mt-0.5">ลงทะเบียนร่วมกิจกรรมสานสัมพันธ์ (สวนลงหมง)</p>
+            <p className="text-xs text-blue-600 font-medium mt-0.5">ลงทะเบียนร่วมกิจกรรมสานสัมพันธ์ (สวนลุงหมง)</p>
           </div>
           <span className="text-gray-300 group-hover:text-blue-500 transition-colors text-xl">→</span>
         </Link>
