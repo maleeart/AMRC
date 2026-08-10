@@ -13,6 +13,7 @@ export default function FriendshipForm() {
   const [optionId, setOptionId] = useState<number | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [previewImg, setPreviewImg] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -80,7 +81,7 @@ export default function FriendshipForm() {
               <p className="text-xs text-gray-400 font-semibold uppercase">สถานที่นัดพบ</p>
               <p className="text-sm font-bold text-gray-800">พิกัดจุดนัดพบกิจกรรม</p>
               <a
-                href="https://share.google/8JoBfaX7aRoMXRI4n"
+                href="https://maps.app.goo.gl/E1Y5wh1QweEfLgrk6"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs text-indigo-600 font-semibold hover:underline mt-1 bg-white px-2.5 py-1.5 rounded-lg border border-indigo-100"
@@ -93,7 +94,11 @@ export default function FriendshipForm() {
 
         {/* Promo Images Grid */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm hover:shadow transition-shadow group">
+          <button
+            type="button"
+            onClick={() => setPreviewImg("/eat.jpg")}
+            className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm hover:shadow transition-shadow group text-left cursor-zoom-in"
+          >
             <div className="relative h-28 w-full overflow-hidden bg-gray-100">
               <Image
                 src="/eat.jpg"
@@ -103,14 +108,21 @@ export default function FriendshipForm() {
               />
             </div>
             <div className="p-3">
-              <h3 className="font-bold text-xs text-gray-800 flex items-center gap-1">🍽️ มื้อพิเศษ</h3>
+              <h3 className="font-bold text-xs text-gray-800 flex items-center justify-between">
+                <span>🍽️ มื้อพิเศษ</span>
+                <span className="text-[9px] text-indigo-500 font-normal group-hover:underline">🔍 ดูรูปใหญ่</span>
+              </h3>
               <p className="text-[10px] text-gray-500 mt-1 leading-snug">
                 รับประทานอาหารอร่อยเลิศรส พูดคุยแลกเปลี่ยนประสบการณ์อบอุ่น
               </p>
             </div>
-          </div>
+          </button>
 
-          <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm hover:shadow transition-shadow group">
+          <button
+            type="button"
+            onClick={() => setPreviewImg("/adventure.jpg")}
+            className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm hover:shadow transition-shadow group text-left cursor-zoom-in"
+          >
             <div className="relative h-28 w-full overflow-hidden bg-gray-100">
               <Image
                 src="/adventure.jpg"
@@ -120,12 +132,15 @@ export default function FriendshipForm() {
               />
             </div>
             <div className="p-3">
-              <h3 className="font-bold text-xs text-gray-800 flex items-center gap-1">🧗‍♂️ แอดเวนเจอร์</h3>
+              <h3 className="font-bold text-xs text-gray-800 flex items-center justify-between">
+                <span>🧗‍♂️ แอดเวนเจอร์</span>
+                <span className="text-[9px] text-indigo-500 font-normal group-hover:underline">🔍 ดูรูปใหญ่</span>
+              </h3>
               <p className="text-[10px] text-gray-500 mt-1 leading-snug">
                 ท้าความมันส์กับกิจกรรมผจญภัย สร้างความสามัคคีร่วมกัน
               </p>
             </div>
-          </div>
+          </button>
         </div>
       </div>
 
@@ -297,6 +312,29 @@ export default function FriendshipForm() {
           👥 ดูรายชื่อผู้ลงทะเบียน ({status === "success" ? "อัปเดตแล้ว" : "รายชื่อทั้งหมด"})
         </Link>
       </div>
+      {/* Image Preview Modal overlay */}
+      {previewImg && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-[fadeIn_0.2s_ease]"
+          onClick={() => setPreviewImg(null)}
+        >
+          <div className="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-gray-950" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={previewImg}
+              alt="กิจกรรมขนาดใหญ่"
+              fill
+              className="object-contain p-2"
+              priority
+            />
+            <button
+              onClick={() => setPreviewImg(null)}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center font-bold text-sm shadow transition-colors cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
