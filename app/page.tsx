@@ -54,7 +54,7 @@ export default async function HomePage() {
           {/* Subtle blue accent glow */}
           <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-400 via-indigo-400 to-sky-400"></div>
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-3xl text-white shrink-0 shadow-sm">
-            🌊
+            📻
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
