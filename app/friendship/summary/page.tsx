@@ -41,9 +41,9 @@ export default async function FriendshipSummaryPage() {
   return (
     <main className="max-w-md mx-auto px-4 py-8">
       <div className="text-center mb-6">
-        <div className="text-4xl mb-2">🌊</div>
-        <h1 className="text-xl font-bold text-gray-800">ผู้ลงทะเบียน Wave of Friendship</h1>
-        <p className="text-gray-500 text-sm">ชมรมวิทยุสมัครเล่น กฟผ.</p>
+        <div className="text-4xl mb-2">📻</div>
+        <h1 className="text-xl font-bold text-gray-800">ผู้ลงทะเบียน Eyeball Meeting</h1>
+        <p className="text-gray-500 text-sm">ชมรมวิทยุสมัครเล่น กฟผ. (สวนลุงหมง)</p>
       </div>
 
       {/* Summary Stats Card */}
@@ -87,7 +87,6 @@ export default async function FriendshipSummaryPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-400 mt-0.5">รหัสพนักงาน: {r.member_id}</p>
                   <div className="mt-1.5 flex items-center gap-2">
                     <span className={`text-[9px] px-2 py-0.5 rounded-full border font-semibold ${OPTION_BADGE_CLASSES[Number(r.option_id)] || 'bg-gray-100'}`}>
                       {OPTION_LABELS[Number(r.option_id)] || "ไม่ระบุ"}

@@ -75,8 +75,9 @@ export default function AdminPage() {
     const originalMemberId = editing!;
     const endpoint = type === "vote" ? "vote" : type === "rally" ? "rally" : "friendship";
     try {
+      const targetMemberId = type === "friendship" ? editData.phone : editData.member_id;
       // If member_id changed: delete old row first, then insert new
-      if (editData.member_id !== originalMemberId) {
+      if (targetMemberId !== originalMemberId) {
         await fetch(`/api/${endpoint}`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -87,7 +88,7 @@ export default function AdminPage() {
         ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
         : type === "rally"
         ? { name: editData.name, memberId: editData.member_id, phone: editData.phone }
-        : { name: editData.name, memberId: editData.member_id, callsign: editData.callsign, phone: editData.phone, optionId: Number(editData.option_id) };
+        : { name: editData.name, memberId: editData.phone, callsign: editData.callsign, phone: editData.phone, optionId: Number(editData.option_id) };
       const res = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -154,7 +155,7 @@ export default function AdminPage() {
             onClick={() => { setTab(t); setEditing(null); setEditError(""); }}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${tab === t ? "bg-white shadow text-gray-800" : "text-gray-500"}`}
           >
-            {t === "votes" ? `👕 เสื้อ (${votes.length})` : t === "rally" ? `🚗 Rally (${rally.length})` : `🌊 Friendship (${friendship.length})`}
+            {t === "votes" ? `👕 เสื้อ (${votes.length})` : t === "rally" ? `🚗 Rally (${rally.length})` : `📻 Eyeball Meeting (${friendship.length})`}
           </button>
         ))}
       </div>
@@ -201,12 +202,14 @@ export default function AdminPage() {
                     onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                     placeholder="ชื่อ-สกุล"
                   />
-                  <input
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono text-gray-600"
-                    value={editData.member_id || ""}
-                    onChange={(e) => setEditData({ ...editData, member_id: e.target.value })}
-                    placeholder="รหัสประจำตัว"
-                  />
+                  {tab !== "friendship" && (
+                    <input
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono text-gray-600"
+                      value={editData.member_id || ""}
+                      onChange={(e) => setEditData({ ...editData, member_id: e.target.value })}
+                      placeholder="รหัสประจำตัว"
+                    />
+                  )}
                   {tab === "votes" && (
                     <>
                       <select
@@ -281,7 +284,7 @@ export default function AdminPage() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-800 truncate">{row.name}</p>
-                    <p className="text-xs text-gray-400">{row.member_id}</p>
+                    {tab !== "friendship" && <p className="text-xs text-gray-400">{row.member_id}</p>}
                     {tab === "votes" && (
                       <div className="flex gap-1.5 mt-1">
                         {(row as Vote).size && (

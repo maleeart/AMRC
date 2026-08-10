@@ -58,7 +58,7 @@ export default async function HomePage() {
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h2 className="font-bold text-gray-850">Ham EGAT: Wave of Friendship</h2>
+              <h2 className="font-bold text-gray-850">Eyeball Meeting</h2>
               <span className="animate-pulse inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
             </div>
             <p className="text-xs text-blue-600 font-medium mt-0.5">ลงทะเบียนร่วมกิจกรรมสานสัมพันธ์ (สวนลุงหมง)</p>

@@ -7,7 +7,6 @@ import BackButton from "../components/BackButton";
 
 export default function FriendshipForm() {
   const [name, setName] = useState("");
-  const [memberId, setMemberId] = useState("");
   const [callsign, setCallsign] = useState("");
   const [phone, setPhone] = useState("");
   const [optionId, setOptionId] = useState<number | null>(null);
@@ -27,14 +26,13 @@ export default function FriendshipForm() {
       const res = await fetch("/api/friendship", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, memberId, callsign, phone, optionId }),
+        body: JSON.stringify({ name, memberId: phone.trim(), callsign, phone, optionId }),
       });
       const data = await res.json();
       if (res.ok) {
         setStatus("success");
         setMessage("ลงทะเบียนสำเร็จเรียบร้อยแล้ว!");
         setName("");
-        setMemberId("");
         setCallsign("");
         setPhone("");
         setOptionId(null);
@@ -55,10 +53,10 @@ export default function FriendshipForm() {
       {/* Title Header */}
       <div className="text-center mb-6">
         <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-          Ham EGAT: Wave of Friendship
+          Eyeball Meeting
         </h1>
         <p className="text-gray-500 text-xs mt-1 font-medium tracking-wide">
-          กิจกรรมสานสัมพันธ์ชมรมวิทยุสมัครเล่น กฟผ.
+          กิจกรรมสานสัมพันธ์ชมรมวิทยุสมัครเล่น กฟผ. (สวนลุงหมง)
         </p>
       </div>
 
@@ -180,32 +178,17 @@ export default function FriendshipForm() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                รหัสพนักงาน <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={memberId}
-                onChange={(e) => setMemberId(e.target.value)}
-                placeholder="เช่น 123456"
-                className="w-full border border-gray-250 bg-gray-50/20 rounded-xl px-3.5 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
-                นามเรียกขาน (ถ้ามี)
-              </label>
-              <input
-                type="text"
-                value={callsign}
-                onChange={(e) => setCallsign(e.target.value)}
-                placeholder="เช่น HS0XXX"
-                className="w-full border border-gray-250 bg-gray-50/20 rounded-xl px-3.5 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white transition-all"
-              />
-            </div>
+          <div>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+              นามเรียกขาน (ถ้ามี)
+            </label>
+            <input
+              type="text"
+              value={callsign}
+              onChange={(e) => setCallsign(e.target.value)}
+              placeholder="เช่น HS0XXX"
+              className="w-full border border-gray-250 bg-gray-50/20 rounded-xl px-3.5 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white transition-all"
+            />
           </div>
 
           <div>
