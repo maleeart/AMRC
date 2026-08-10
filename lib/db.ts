@@ -70,3 +70,39 @@ export async function isRallyMember(memberId: string) {
   const result = await sql`SELECT 1 FROM rally WHERE member_id = ${memberId} LIMIT 1`;
   return result.length > 0;
 }
+
+export async function initFriendshipDB() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS friendship (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      member_id VARCHAR(100) NOT NULL UNIQUE,
+      callsign VARCHAR(100),
+      phone VARCHAR(30) NOT NULL,
+      option_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    )
+  `;
+}
+
+export async function insertFriendship(name: string, memberId: string, callsign: string, phone: string, optionId: number) {
+  return sql`
+    INSERT INTO friendship (name, member_id, callsign, phone, option_id)
+    VALUES (${name}, ${memberId}, ${callsign}, ${phone}, ${optionId})
+    ON CONFLICT (member_id) DO UPDATE SET name = ${name}, callsign = ${callsign}, phone = ${phone}, option_id = ${optionId}, created_at = NOW()
+  `;
+}
+
+export async function getFriendship() {
+  return sql`SELECT name, member_id, callsign, phone, option_id, created_at FROM friendship ORDER BY created_at DESC`;
+}
+
+export async function deleteFriendship(memberId: string) {
+  return sql`DELETE FROM friendship WHERE member_id = ${memberId}`;
+}
+
+export async function isFriendshipMember(memberId: string) {
+  const result = await sql`SELECT 1 FROM friendship WHERE member_id = ${memberId} LIMIT 1`;
+  return result.length > 0;
+}
+

@@ -46,43 +46,58 @@ export default async function HomePage() {
 
       {/* Menu */}
       <div className="space-y-4">
+        {/* Active: Wave of Friendship */}
         <Link
-          href="/vote"
-          className="group flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+          href="/friendship"
+          className="group flex items-center gap-4 bg-white border border-blue-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden"
         >
-          <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-3xl shrink-0">
-            👕
+          {/* Subtle blue accent glow */}
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-400 via-indigo-400 to-sky-400"></div>
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-3xl text-white shrink-0 shadow-sm">
+            🌊
           </div>
           <div className="flex-1">
-            <h2 className="font-bold text-gray-800">โหวตสีเสื้อ</h2>
-            <p className="text-xs text-gray-500 mt-0.5">เลือกสีและไซส์เสื้อกิจกรรม</p>
+            <div className="flex items-center gap-2">
+              <h2 className="font-bold text-gray-850">Ham EGAT: Wave of Friendship</h2>
+              <span className="animate-pulse inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+            </div>
+            <p className="text-xs text-blue-600 font-medium mt-0.5">ลงทะเบียนร่วมกิจกรรมสานสัมพันธ์</p>
           </div>
           <span className="text-gray-300 group-hover:text-blue-500 transition-colors text-xl">→</span>
         </Link>
 
-        <Link
-          href="/rally"
-          className={`group flex items-center gap-4 bg-white border rounded-2xl p-5 shadow-sm transition-all duration-200 ${
-            isFull ? "border-red-100 opacity-75" : "border-gray-100 hover:shadow-md hover:-translate-y-0.5"
-          }`}
-        >
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 ${isFull ? "bg-red-50" : "bg-green-100"}`}>
-            🚗
+        {/* Dropdown for past activities */}
+        <details className="group border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all duration-350">
+          <summary className="flex items-center justify-between cursor-pointer p-4 select-none font-bold text-sm text-gray-500 hover:bg-gray-50 transition-colors">
+            <span className="flex items-center gap-2">⏱️ กิจกรรมที่ผ่านมา (สิ้นสุดกำหนดแล้ว)</span>
+            <span className="text-gray-400 group-open:rotate-180 transition-transform duration-250 text-xs">▼</span>
+          </summary>
+          <div className="p-4 border-t border-gray-100 bg-gray-50/70 space-y-3 pointer-events-none select-none">
+            {/* Disabled Vote Card */}
+            <div className="flex items-center gap-4 bg-white border border-gray-100 rounded-xl p-4 opacity-55 grayscale">
+              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-2xl shrink-0">
+                👕
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-700 text-sm">โหวตสีเสื้อ</h3>
+                <p className="text-[11px] text-gray-400 mt-0.5">สิ้นสุดเวลากิจกรรม</p>
+              </div>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">ปิดโหวต</span>
+            </div>
+
+            {/* Disabled Rally Card */}
+            <div className="flex items-center gap-4 bg-white border border-gray-100 rounded-xl p-4 opacity-55 grayscale">
+              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-2xl shrink-0">
+                🚗
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-700 text-sm">ลงทะเบียน Rally</h3>
+                <p className="text-[11px] text-gray-400 mt-0.5">กฟผ. - วังน้ำเขียว</p>
+              </div>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">สิ้นสุดแล้ว</span>
+            </div>
           </div>
-          <div className="flex-1">
-            <h2 className="font-bold text-gray-800">ลงทะเบียน Rally</h2>
-            <p className="text-xs text-gray-500 mt-0.5">กฟผ. - วังน้ำเขียว</p>
-          </div>
-          <span className={`text-xs font-bold px-2.5 py-1 rounded-full shrink-0 ${
-            isFull
-              ? "bg-red-100 text-red-500"
-              : slotsLeft <= 2
-              ? "bg-orange-100 text-orange-600"
-              : "bg-green-100 text-green-700"
-          }`}>
-            {isFull ? "เต็มแล้ว" : `ว่าง ${slotsLeft}/${RALLY_LIMIT}`}
-          </span>
-        </Link>
+        </details>
       </div>
 
       <div className="mt-10 text-center">

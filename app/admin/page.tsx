@@ -8,16 +8,18 @@ const SIZES = ["SSS","SS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL","
 
 type Vote = { name: string; member_id: string; color: string; size: string | null };
 type Rally = { name: string; member_id: string; phone: string };
+type Friendship = { name: string; member_id: string; callsign: string; phone: string; option_id: number };
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [pw, setPw] = useState("");
   const [pwError, setPwError] = useState(false);
-  const [tab, setTab] = useState<"votes" | "rally">("votes");
+  const [tab, setTab] = useState<"votes" | "rally" | "friendship">("votes");
   const [votes, setVotes] = useState<Vote[]>([]);
   const [rally, setRally] = useState<Rally[]>([]);
+  const [friendship, setFriendship] = useState<Friendship[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Partial<Vote & Rally>>({});
+  const [editData, setEditData] = useState<Partial<Vote & Rally & Friendship>>({});
   const [editError, setEditError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -26,9 +28,14 @@ export default function AdminPage() {
   }, []);
 
   const load = useCallback(async () => {
-    const [vRes, rRes] = await Promise.all([fetch("/api/results"), fetch("/api/rally-list")]);
+    const [vRes, rRes, fRes] = await Promise.all([
+      fetch("/api/results"),
+      fetch("/api/rally-list"),
+      fetch("/api/friendship-list")
+    ]);
     if (vRes.ok) setVotes(await vRes.json());
     if (rRes.ok) setRally(await rRes.json());
+    if (fRes.ok) setFriendship(await fRes.json());
   }, []);
 
   useEffect(() => { if (authed) load(); }, [authed, load]);
@@ -48,10 +55,11 @@ export default function AdminPage() {
     setAuthed(false);
   }
 
-  async function deleteRow(type: "vote" | "rally", memberId: string) {
+  async function deleteRow(type: "vote" | "rally" | "friendship", memberId: string) {
     if (!confirm("ลบรายการนี้?")) return;
     setBusy(true);
-    await fetch(`/api/${type === "vote" ? "vote" : "rally"}`, {
+    const endpoint = type === "vote" ? "vote" : type === "rally" ? "rally" : "friendship";
+    await fetch(`/api/${endpoint}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ memberId }),
@@ -60,12 +68,12 @@ export default function AdminPage() {
     setBusy(false);
   }
 
-  async function saveEdit(type: "vote" | "rally") {
+  async function saveEdit(type: "vote" | "rally" | "friendship") {
     setEditError("");
     setBusy(true);
     // editing state holds the ORIGINAL member_id as the key
     const originalMemberId = editing!;
-    const endpoint = type === "vote" ? "vote" : "rally";
+    const endpoint = type === "vote" ? "vote" : type === "rally" ? "rally" : "friendship";
     try {
       // If member_id changed: delete old row first, then insert new
       if (editData.member_id !== originalMemberId) {
@@ -77,7 +85,9 @@ export default function AdminPage() {
       }
       const body = type === "vote"
         ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
-        : { name: editData.name, memberId: editData.member_id, phone: editData.phone };
+        : type === "rally"
+        ? { name: editData.name, memberId: editData.member_id, phone: editData.phone }
+        : { name: editData.name, memberId: editData.member_id, callsign: editData.callsign, phone: editData.phone, optionId: Number(editData.option_id) };
       const res = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,7 +135,7 @@ export default function AdminPage() {
     );
   }
 
-  const currentList = tab === "votes" ? votes : rally;
+  const currentList = tab === "votes" ? votes : tab === "rally" ? rally : friendship;
 
   return (
     <main className="max-w-lg mx-auto px-4 py-8 animate-[fadeIn_0.4s_ease]">
@@ -137,17 +147,41 @@ export default function AdminPage() {
       <h1 className="text-xl font-bold text-gray-800 mb-4">🛠 จัดการข้อมูล</h1>
 
       {/* Tabs */}
-      <div className="flex rounded-xl bg-gray-100 p-1 mb-6">
-        {(["votes", "rally"] as const).map((t) => (
+      <div className="flex rounded-xl bg-gray-100 p-1 mb-6 gap-1">
+        {(["votes", "rally", "friendship"] as const).map((t) => (
           <button
             key={t}
-            onClick={() => setTab(t)}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === t ? "bg-white shadow text-gray-800" : "text-gray-500"}`}
+            onClick={() => { setTab(t); setEditing(null); setEditError(""); }}
+            className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${tab === t ? "bg-white shadow text-gray-800" : "text-gray-500"}`}
           >
-            {t === "votes" ? `👕 โหวตเสื้อ (${votes.length})` : `🚗 ลงทะเบียน Rally (${rally.length})`}
+            {t === "votes" ? `👕 เสื้อ (${votes.length})` : t === "rally" ? `🚗 Rally (${rally.length})` : `🌊 Friendship (${friendship.length})`}
           </button>
         ))}
       </div>
+
+      {/* Summary for Friendship */}
+      {tab === "friendship" && (
+        <div className="grid grid-cols-3 gap-2 bg-indigo-50/50 border border-indigo-100 rounded-xl p-3 mb-4 text-center">
+          <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
+            <p className="text-[10px] text-sky-600 font-bold">🍽️ ทานอาหาร</p>
+            <p className="text-sm font-extrabold text-sky-850 mt-0.5">
+              {friendship.filter((r) => Number(r.option_id) === 1).length} คน
+            </p>
+          </div>
+          <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
+            <p className="text-[10px] text-indigo-600 font-bold">🧗‍♂️ กิจกรรม</p>
+            <p className="text-sm font-extrabold text-indigo-850 mt-0.5">
+              {friendship.filter((r) => Number(r.option_id) === 2).length} คน
+            </p>
+          </div>
+          <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
+            <p className="text-[10px] text-gray-500 font-bold">❌ ไม่สะดวก</p>
+            <p className="text-sm font-extrabold text-gray-700 mt-0.5">
+              {friendship.filter((r) => Number(r.option_id) === 3).length} คน
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* List */}
       <div className="space-y-3">
@@ -162,18 +196,18 @@ export default function AdminPage() {
               {isEditing ? (
                 <div className="space-y-3">
                   <input
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-semibold text-gray-800"
                     value={editData.name || ""}
                     onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                     placeholder="ชื่อ-สกุล"
                   />
                   <input
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono text-gray-600"
                     value={editData.member_id || ""}
                     onChange={(e) => setEditData({ ...editData, member_id: e.target.value })}
                     placeholder="รหัสประจำตัว"
                   />
-                  {tab === "votes" ? (
+                  {tab === "votes" && (
                     <>
                       <select
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
@@ -192,7 +226,8 @@ export default function AdminPage() {
                         {SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </>
-                  ) : (
+                  )}
+                  {tab === "rally" && (
                     <input
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
                       value={editData.phone || ""}
@@ -200,10 +235,35 @@ export default function AdminPage() {
                       placeholder="เบอร์โทร"
                     />
                   )}
+                  {tab === "friendship" && (
+                    <>
+                      <input
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono uppercase"
+                        value={editData.callsign || ""}
+                        onChange={(e) => setEditData({ ...editData, callsign: e.target.value })}
+                        placeholder="รหัสนามเรียกขาน (ถ้ามี)"
+                      />
+                      <input
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        value={editData.phone || ""}
+                        onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+                        placeholder="เบอร์โทร"
+                      />
+                      <select
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        value={editData.option_id || 1}
+                        onChange={(e) => setEditData({ ...editData, option_id: Number(e.target.value) })}
+                      >
+                        <option value={1}>ร่วมทานอาหาร</option>
+                        <option value={2}>ร่วมทานอาหาร + เล่นกิจกรรม Adventure</option>
+                        <option value={3}>ไม่สะดวกเข้าร่วม</option>
+                      </select>
+                    </>
+                  )}
                   {editError && <p className="text-red-500 text-xs text-center">{editError}</p>}
                   <div className="flex gap-2">
                     <button
-                      onClick={() => saveEdit(tab === "votes" ? "vote" : "rally")}
+                      onClick={() => saveEdit(tab === "votes" ? "vote" : tab === "rally" ? "rally" : "friendship")}
                       disabled={busy}
                       className="flex-1 bg-blue-600 text-white text-sm font-semibold py-2 rounded-lg disabled:opacity-40"
                     >
@@ -235,6 +295,25 @@ export default function AdminPage() {
                     {tab === "rally" && (
                       <p className="text-xs text-blue-600 mt-0.5">{(row as Rally).phone}</p>
                     )}
+                    {tab === "friendship" && (
+                      <div className="mt-1 space-y-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {(row as Friendship).callsign && (
+                            <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-100 px-1.5 py-0.5 rounded font-mono font-bold uppercase">
+                              {(row as Friendship).callsign}
+                            </span>
+                          )}
+                          <span className="text-xs text-blue-600 font-semibold">{(row as Friendship).phone}</span>
+                        </div>
+                        <p className="text-[10px] text-gray-500 font-semibold bg-gray-50 border border-gray-100 px-2 py-1 rounded inline-block">
+                          {Number((row as Friendship).option_id) === 1
+                            ? "🍽️ ร่วมทานอาหาร"
+                            : Number((row as Friendship).option_id) === 2
+                            ? "🧗‍♂️ อาหาร + กิจกรรม"
+                            : "❌ ไม่สะดวกเข้าร่วม"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button
@@ -244,7 +323,7 @@ export default function AdminPage() {
                       ✏️
                     </button>
                     <button
-                      onClick={() => deleteRow(tab === "votes" ? "vote" : "rally", mid)}
+                      onClick={() => deleteRow(tab === "votes" ? "vote" : tab === "rally" ? "rally" : "friendship", mid)}
                       disabled={busy}
                       className="w-9 h-9 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-base hover:bg-red-100 transition-colors disabled:opacity-40"
                     >
