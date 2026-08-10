@@ -166,7 +166,7 @@ export default function AdminPage() {
           <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
             <p className="text-[10px] text-sky-600 font-bold">🍽️ ทานอาหาร</p>
             <p className="text-sm font-extrabold text-sky-850 mt-0.5">
-              {friendship.filter((r) => Number(r.option_id) === 1).length} คน
+              {friendship.filter((r) => [1, 2].includes(Number(r.option_id))).length} คน
             </p>
           </div>
           <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">

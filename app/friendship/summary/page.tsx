@@ -34,7 +34,7 @@ export default async function FriendshipSummaryPage() {
   }
 
   // Count summaries
-  const diningCount = list.filter((r) => Number(r.option_id) === 1).length;
+  const diningCount = list.filter((r) => [1, 2].includes(Number(r.option_id))).length;
   const adventureCount = list.filter((r) => Number(r.option_id) === 2).length;
   const cannotAttendCount = list.filter((r) => Number(r.option_id) === 3).length;
 
