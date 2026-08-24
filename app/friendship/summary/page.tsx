@@ -37,6 +37,9 @@ export default async function FriendshipSummaryPage() {
   const diningCount = list.filter((r) => [1, 2].includes(Number(r.option_id))).length;
   const adventureCount = list.filter((r) => Number(r.option_id) === 2).length;
   const cannotAttendCount = list.filter((r) => Number(r.option_id) === 3).length;
+  const option1Count = list.filter((r) => Number(r.option_id) === 1).length;
+  const option2Count = list.filter((r) => Number(r.option_id) === 2).length;
+  const totalCost = (option1Count * 500) + (option2Count * 1000);
 
   return (
     <main className="max-w-md mx-auto px-4 py-8">
@@ -65,7 +68,7 @@ export default async function FriendshipSummaryPage() {
       <div className="text-center text-sm text-gray-500 mb-6 space-y-1">
         <p>ยอดลงทะเบียนรวมทั้งหมด <span className="font-semibold text-gray-800">{list.length}</span> คน</p>
         <p className="text-xs text-indigo-600 font-bold bg-indigo-50 border border-indigo-100 rounded-xl py-1.5 px-3 inline-block">
-          🍽️ ประมาณการค่าอาหารรวม (คนละ 500.-): <span className="text-sm font-extrabold text-indigo-800">{(diningCount * 500).toLocaleString()}</span> บาท
+          💰 ประมาณการยอดค่าใช้จ่ายรวม: <span className="text-sm font-extrabold text-indigo-800">{totalCost.toLocaleString()}</span> บาท
         </p>
       </div>
 

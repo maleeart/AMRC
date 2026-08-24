@@ -185,7 +185,10 @@ export default function AdminPage() {
           </div>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 mb-4 text-center">
             <p className="text-xs text-emerald-700 font-bold">
-              🍽️ ค่าใช้จ่ายอาหารรวม (คนละ 500 บาท): <span className="text-base font-black text-emerald-800">{(friendship.filter((r) => [1, 2].includes(Number(r.option_id))).length * 500).toLocaleString()}</span> บาท
+              💰 ยอดค่าใช้จ่ายรวมประมาณการ: <span className="text-base font-black text-emerald-800">{(
+                (friendship.filter((r) => Number(r.option_id) === 1).length * 500) +
+                (friendship.filter((r) => Number(r.option_id) === 2).length * 1000)
+              ).toLocaleString()}</span> บาท
             </p>
           </div>
         </>
