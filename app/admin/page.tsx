@@ -162,26 +162,33 @@ export default function AdminPage() {
 
       {/* Summary for Friendship */}
       {tab === "friendship" && (
-        <div className="grid grid-cols-3 gap-2 bg-indigo-50/50 border border-indigo-100 rounded-xl p-3 mb-4 text-center">
-          <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
-            <p className="text-[10px] text-sky-600 font-bold">🍽️ ทานอาหาร</p>
-            <p className="text-sm font-extrabold text-sky-850 mt-0.5">
-              {friendship.filter((r) => [1, 2].includes(Number(r.option_id))).length} คน
+        <>
+          <div className="grid grid-cols-3 gap-2 bg-indigo-50/50 border border-indigo-100 rounded-xl p-3 mb-3 text-center">
+            <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
+              <p className="text-[10px] text-sky-600 font-bold">🍽️ ทานอาหาร</p>
+              <p className="text-sm font-extrabold text-sky-850 mt-0.5">
+                {friendship.filter((r) => [1, 2].includes(Number(r.option_id))).length} คน
+              </p>
+            </div>
+            <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
+              <p className="text-[10px] text-indigo-600 font-bold">🧗‍♂️ กิจกรรม</p>
+              <p className="text-sm font-extrabold text-indigo-850 mt-0.5">
+                {friendship.filter((r) => Number(r.option_id) === 2).length} คน
+              </p>
+            </div>
+            <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
+              <p className="text-[10px] text-gray-500 font-bold">❌ ไม่สะดวก</p>
+              <p className="text-sm font-extrabold text-gray-700 mt-0.5">
+                {friendship.filter((r) => Number(r.option_id) === 3).length} คน
+              </p>
+            </div>
+          </div>
+          <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 mb-4 text-center">
+            <p className="text-xs text-emerald-700 font-bold">
+              🍽️ ค่าใช้จ่ายอาหารรวม (คนละ 500 บาท): <span className="text-base font-black text-emerald-800">{(friendship.filter((r) => [1, 2].includes(Number(r.option_id))).length * 500).toLocaleString()}</span> บาท
             </p>
           </div>
-          <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
-            <p className="text-[10px] text-indigo-600 font-bold">🧗‍♂️ กิจกรรม</p>
-            <p className="text-sm font-extrabold text-indigo-850 mt-0.5">
-              {friendship.filter((r) => Number(r.option_id) === 2).length} คน
-            </p>
-          </div>
-          <div className="bg-white border border-indigo-50 rounded-lg p-1.5 shadow-sm">
-            <p className="text-[10px] text-gray-500 font-bold">❌ ไม่สะดวก</p>
-            <p className="text-sm font-extrabold text-gray-700 mt-0.5">
-              {friendship.filter((r) => Number(r.option_id) === 3).length} คน
-            </p>
-          </div>
-        </div>
+        </>
       )}
 
       {/* List */}

@@ -62,8 +62,11 @@ export default async function FriendshipSummaryPage() {
         </div>
       </div>
 
-      <div className="text-center text-sm text-gray-500 mb-6">
-        ยอดลงทะเบียนรวมทั้งหมด <span className="font-semibold text-gray-800">{list.length}</span> คน
+      <div className="text-center text-sm text-gray-500 mb-6 space-y-1">
+        <p>ยอดลงทะเบียนรวมทั้งหมด <span className="font-semibold text-gray-800">{list.length}</span> คน</p>
+        <p className="text-xs text-indigo-600 font-bold bg-indigo-50 border border-indigo-100 rounded-xl py-1.5 px-3 inline-block">
+          🍽️ ประมาณการค่าอาหารรวม (คนละ 500.-): <span className="text-sm font-extrabold text-indigo-800">{(diningCount * 500).toLocaleString()}</span> บาท
+        </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">

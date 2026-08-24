@@ -222,7 +222,7 @@ export default function FriendshipForm() {
               >
                 <span className="text-xl shrink-0 mt-0.5">🍽️</span>
                 <div>
-                  <h4 className="font-bold text-xs text-gray-800">ร่วมทานอาหาร</h4>
+                  <h4 className="font-bold text-xs text-gray-800">ร่วมทานอาหาร (คนละ 500 บาท)</h4>
                   <p className="text-[10px] text-gray-500 mt-0.5">ทานอาหารเลิศรส สานความอบอุ่นภายในชมรม</p>
                 </div>
                 {optionId === 1 && (
@@ -242,7 +242,7 @@ export default function FriendshipForm() {
               >
                 <span className="text-xl shrink-0 mt-0.5">🧗‍♂️</span>
                 <div>
-                  <h4 className="font-bold text-xs text-gray-800">ร่วมทานอาหาร + เล่นกิจกรรม Adventure</h4>
+                  <h4 className="font-bold text-xs text-gray-800">ร่วมทานอาหาร + เล่นกิจกรรม Adventure (คนละ 500 บาท)</h4>
                   <p className="text-[10px] text-gray-500 mt-0.5">ทานอาหาร และผจญภัยท้าทายสนุกเต็มพิกัด</p>
                 </div>
                 {optionId === 2 && (
