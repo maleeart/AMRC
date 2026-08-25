@@ -8,7 +8,7 @@ const SIZES = ["SSS","SS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL","
 
 type Vote = { name: string; member_id: string; color: string; size: string | null };
 type Rally = { name: string; member_id: string; phone: string };
-type Friendship = { name: string; member_id: string; callsign: string; phone: string; option_id: number };
+type Friendship = { name: string; member_id: string; callsign: string; phone: string; option_id: number; payment_status?: string; slip_url?: string | null };
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
@@ -88,7 +88,15 @@ export default function AdminPage() {
         ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
         : type === "rally"
         ? { name: editData.name, memberId: editData.member_id, phone: editData.phone }
-        : { name: editData.name, memberId: editData.phone, callsign: editData.callsign, phone: editData.phone, optionId: Number(editData.option_id) };
+        : { 
+            name: editData.name, 
+            memberId: editData.phone, 
+            callsign: editData.callsign, 
+            phone: editData.phone, 
+            optionId: Number(editData.option_id),
+            paymentStatus: editData.payment_status,
+            slipUrl: editData.slip_url
+          };
       const res = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -271,6 +279,14 @@ export default function AdminPage() {
                         <option value={2}>ร่วมทานอาหาร + เล่นกิจกรรม Adventure</option>
                         <option value={3}>ไม่สะดวกเข้าร่วม</option>
                       </select>
+                      <select
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-semibold"
+                        value={editData.payment_status || "pending"}
+                        onChange={(e) => setEditData({ ...editData, payment_status: e.target.value })}
+                      >
+                        <option value="pending">🔴 รอชำระเงิน</option>
+                        <option value="paid">🟢 ชำระเงินแล้ว</option>
+                      </select>
                     </>
                   )}
                   {editError && <p className="text-red-500 text-xs text-center">{editError}</p>}
@@ -318,13 +334,34 @@ export default function AdminPage() {
                           )}
                           <span className="text-xs text-blue-600 font-semibold">{(row as Friendship).phone}</span>
                         </div>
-                        <p className="text-[10px] text-gray-500 font-semibold bg-gray-50 border border-gray-100 px-2 py-1 rounded inline-block">
-                          {Number((row as Friendship).option_id) === 1
-                            ? "🍽️ ร่วมทานอาหาร"
-                            : Number((row as Friendship).option_id) === 2
-                            ? "🧗‍♂️ อาหาร + กิจกรรม"
-                            : "❌ ไม่สะดวกเข้าร่วม"}
-                        </p>
+                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <p className="text-[10px] text-gray-500 font-semibold bg-gray-50 border border-gray-100 px-2 py-1 rounded inline-block">
+                            {Number((row as Friendship).option_id) === 1
+                              ? "🍽️ ร่วมทานอาหาร"
+                              : Number((row as Friendship).option_id) === 2
+                              ? "🧗‍♂️ อาหาร + กิจกรรม"
+                              : "❌ ไม่สะดวกเข้าร่วม"}
+                          </p>
+                          {Number((row as Friendship).option_id) !== 3 && (
+                            <span className={`text-[10px] px-2 py-1 rounded font-bold border ${
+                              (row as Friendship).payment_status === 'paid' 
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-250' 
+                                : 'bg-rose-50 text-rose-700 border-rose-250'
+                            }`}>
+                              {(row as Friendship).payment_status === 'paid' ? '🟢 ชำระแล้ว' : '🔴 รอชำระเงิน'}
+                            </span>
+                          )}
+                          {(row as Friendship).slip_url && (
+                            <a
+                              href={(row as Friendship).slip_url || undefined}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded font-bold hover:bg-blue-100 transition-colors inline-block"
+                            >
+                              📄 ดูสลิป
+                            </a>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>

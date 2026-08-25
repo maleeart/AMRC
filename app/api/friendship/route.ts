@@ -3,9 +3,53 @@ import { initFriendshipDB, insertFriendship, deleteFriendship } from "../../../l
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, memberId, callsign, phone, optionId } = await req.json();
+    const contentType = req.headers.get("content-type") || "";
+    let name = "";
+    let memberId = "";
+    let callsign = "";
+    let phone = "";
+    let optionId = 1;
+    let paymentStatus = "pending";
+    let slipUrl: string | null = null;
 
-    if (!name?.trim() || !memberId?.trim() || !phone?.trim() || ![1, 2, 3].includes(Number(optionId))) {
+    if (contentType.includes("application/json")) {
+      const body = await req.json();
+      name = body.name || "";
+      memberId = body.memberId || "";
+      callsign = body.callsign || "";
+      phone = body.phone || "";
+      optionId = Number(body.optionId);
+      paymentStatus = body.paymentStatus || "pending";
+      slipUrl = body.slipUrl || null;
+    } else {
+      const data = await req.formData();
+      name = (data.get("name") as string) || "";
+      memberId = (data.get("memberId") as string) || "";
+      callsign = (data.get("callsign") as string) || "";
+      phone = (data.get("phone") as string) || "";
+      optionId = Number(data.get("optionId"));
+
+      const slipFile = data.get("slip") as File | null;
+      if (slipFile && slipFile.size > 0) {
+        const arrayBuffer = await slipFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const filename = Date.now() + "_" + slipFile.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+
+        const { mkdir, writeFile } = await import("fs/promises");
+        const { join } = await import("path");
+        const uploadDir = join(process.cwd(), "public", "slips");
+        await mkdir(uploadDir, { recursive: true });
+        await writeFile(join(uploadDir, filename), buffer);
+
+        slipUrl = "/slips/" + filename;
+        paymentStatus = "paid";
+      } else {
+        paymentStatus = "pending";
+        slipUrl = null;
+      }
+    }
+
+    if (!name.trim() || !memberId.trim() || !phone.trim() || ![1, 2, 3].includes(optionId)) {
       return NextResponse.json({ error: "ข้อมูลไม่ครบถ้วนหรือไม่ถูกต้อง" }, { status: 400 });
     }
 
@@ -13,9 +57,11 @@ export async function POST(req: NextRequest) {
     await insertFriendship(
       name.trim(),
       memberId.trim(),
-      callsign?.trim() || "",
+      callsign.trim(),
       phone.trim(),
-      Number(optionId)
+      optionId,
+      paymentStatus,
+      slipUrl
     );
 
     return NextResponse.json({ ok: true });

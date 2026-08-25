@@ -10,6 +10,7 @@ export default function FriendshipForm() {
   const [callsign, setCallsign] = useState("");
   const [phone, setPhone] = useState("");
   const [optionId, setOptionId] = useState<number | null>(null);
+  const [slipFile, setSlipFile] = useState<File | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [previewImg, setPreviewImg] = useState<string | null>(null);
@@ -23,10 +24,19 @@ export default function FriendshipForm() {
     }
     setStatus("loading");
     try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("memberId", phone.trim());
+      formData.append("callsign", callsign);
+      formData.append("phone", phone);
+      formData.append("optionId", String(optionId));
+      if (slipFile) {
+        formData.append("slip", slipFile);
+      }
+
       const res = await fetch("/api/friendship", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, memberId: phone.trim(), callsign, phone, optionId }),
+        body: formData,
       });
       const data = await res.json();
       if (res.ok) {
@@ -36,6 +46,7 @@ export default function FriendshipForm() {
         setCallsign("");
         setPhone("");
         setOptionId(null);
+        setSlipFile(null);
       } else {
         setStatus("error");
         setMessage(data.error || "เกิดข้อผิดพลาด");
@@ -271,6 +282,35 @@ export default function FriendshipForm() {
               </button>
             </div>
           </div>
+
+          {(optionId === 1 || optionId === 2) && (
+            <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-4 space-y-3 animate-[fadeIn_0.3s_ease]">
+              <div>
+                <p className="text-xs font-bold text-indigo-800">💳 ช่องทางการชำระเงิน</p>
+                <div className="bg-white rounded-lg p-2.5 mt-1 border border-indigo-100/60 text-xs text-gray-700 font-medium space-y-1">
+                  <p>ธนาคาร: <span className="font-bold text-gray-900">0867454199 (พร้อมเพย์)</span></p>
+                  <p>ชื่อบัญชี: <span className="font-bold text-gray-900">ปุณณวิทย์</span></p>
+                  <p className="text-indigo-600 font-bold mt-1">ยอดที่ต้องโอน: <span className="text-sm font-extrabold">{optionId === 1 ? "500" : "1,000"}</span> บาท</p>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                  แนบสลิปโอนเงิน (สลิปการชำระเงิน)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setSlipFile(e.target.files[0]);
+                    }
+                  }}
+                  className="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 file:cursor-pointer cursor-pointer border border-gray-200 rounded-xl p-1 bg-white focus:outline-none"
+                />
+                <p className="text-[10px] text-gray-400 mt-1">อัปโหลดสลิปเพื่อยืนยันสถานะ "ชำระเงินแล้ว" (หากยังไม่แนบจะขึ้น "รอชำระเงิน")</p>
+              </div>
+            </div>
+          )}
 
           {status === "error" && (
             <p className="text-red-500 text-xs text-center font-medium">{message}</p>

@@ -83,18 +83,35 @@ export async function initFriendshipDB() {
       created_at TIMESTAMP DEFAULT NOW()
     )
   `;
+  await sql`ALTER TABLE friendship ADD COLUMN IF NOT EXISTS payment_status VARCHAR(20) DEFAULT 'pending'`;
+  await sql`ALTER TABLE friendship ADD COLUMN IF NOT EXISTS slip_url TEXT`;
 }
 
-export async function insertFriendship(name: string, memberId: string, callsign: string, phone: string, optionId: number) {
+export async function insertFriendship(
+  name: string,
+  memberId: string,
+  callsign: string,
+  phone: string,
+  optionId: number,
+  paymentStatus: string = 'pending',
+  slipUrl: string | null = null
+) {
   return sql`
-    INSERT INTO friendship (name, member_id, callsign, phone, option_id)
-    VALUES (${name}, ${memberId}, ${callsign}, ${phone}, ${optionId})
-    ON CONFLICT (member_id) DO UPDATE SET name = ${name}, callsign = ${callsign}, phone = ${phone}, option_id = ${optionId}, created_at = NOW()
+    INSERT INTO friendship (name, member_id, callsign, phone, option_id, payment_status, slip_url)
+    VALUES (${name}, ${memberId}, ${callsign}, ${phone}, ${optionId}, ${paymentStatus}, ${slipUrl})
+    ON CONFLICT (member_id) DO UPDATE SET 
+      name = ${name}, 
+      callsign = ${callsign}, 
+      phone = ${phone}, 
+      option_id = ${optionId}, 
+      payment_status = ${paymentStatus}, 
+      slip_url = COALESCE(${slipUrl}, friendship.slip_url),
+      created_at = NOW()
   `;
 }
 
 export async function getFriendship() {
-  return sql`SELECT name, member_id, callsign, phone, option_id, created_at FROM friendship ORDER BY created_at DESC`;
+  return sql`SELECT name, member_id, callsign, phone, option_id, payment_status, slip_url, created_at FROM friendship ORDER BY created_at DESC`;
 }
 
 export async function deleteFriendship(memberId: string) {

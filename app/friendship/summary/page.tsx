@@ -9,6 +9,8 @@ type Registrant = {
   callsign: string;
   phone: string;
   option_id: number;
+  payment_status?: string;
+  slip_url?: string | null;
   created_at: Date;
 };
 
@@ -93,10 +95,15 @@ export default async function FriendshipSummaryPage() {
                       </span>
                     )}
                   </div>
-                  <div className="mt-1.5 flex items-center gap-2">
+                  <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
                     <span className={`text-[9px] px-2 py-0.5 rounded-full border font-semibold ${OPTION_BADGE_CLASSES[Number(r.option_id)] || 'bg-gray-100'}`}>
                       {OPTION_LABELS[Number(r.option_id)] || "ไม่ระบุ"}
                     </span>
+                    {Number(r.option_id) !== 3 && (
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full border font-bold ${r.payment_status === 'paid' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
+                        {r.payment_status === 'paid' ? '🟢 ชำระเงินแล้ว' : '🔴 รอชำระเงิน'}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <a href={`tel:${r.phone}`} className="text-xs text-blue-600 font-semibold bg-blue-50 border border-blue-100/50 hover:bg-blue-100 px-2.5 py-1.5 rounded-lg shrink-0 transition-colors">
