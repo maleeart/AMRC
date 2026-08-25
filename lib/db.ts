@@ -98,14 +98,17 @@ export async function insertFriendship(
 ) {
   return sql`
     INSERT INTO friendship (name, member_id, callsign, phone, option_id, payment_status, slip_url)
-    VALUES (${name}, ${memberId}, ${callsign}, ${phone}, ${optionId}, ${paymentStatus}, ${slipUrl})
+    VALUES (${name}, ${memberId}, ${callsign}, ${phone}, ${optionId}, ${paymentStatus}, CASE WHEN ${paymentStatus} = 'pending' THEN NULL ELSE ${slipUrl} END)
     ON CONFLICT (member_id) DO UPDATE SET 
       name = ${name}, 
       callsign = ${callsign}, 
       phone = ${phone}, 
       option_id = ${optionId}, 
       payment_status = ${paymentStatus}, 
-      slip_url = COALESCE(${slipUrl}, friendship.slip_url),
+      slip_url = CASE 
+        WHEN ${paymentStatus} = 'pending' THEN NULL 
+        ELSE COALESCE(${slipUrl}, friendship.slip_url) 
+      END,
       created_at = NOW()
   `;
 }
