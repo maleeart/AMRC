@@ -22,6 +22,7 @@ export default function AdminPage() {
   const [editData, setEditData] = useState<Partial<Vote & Rally & Friendship & { slipFile?: File }>>({});
   const [editError, setEditError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [previewSlip, setPreviewSlip] = useState<string | null>(null);
 
   useEffect(() => {
     if (sessionStorage.getItem("amrc_admin") === "1") setAuthed(true);
@@ -377,14 +378,12 @@ export default function AdminPage() {
                             </span>
                           )}
                           {(row as Friendship).slip_url && (
-                            <a
-                              href={(row as Friendship).slip_url || undefined}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded font-bold hover:bg-blue-100 transition-colors inline-block"
+                            <button
+                              onClick={() => setPreviewSlip((row as Friendship).slip_url || null)}
+                              className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded font-bold hover:bg-blue-100 transition-colors inline-block cursor-pointer"
                             >
                               📄 ดูสลิป
-                            </a>
+                            </button>
                           )}
                         </div>
                       </div>
@@ -411,6 +410,29 @@ export default function AdminPage() {
           );
         })}
       </div>
+
+      {/* Slip Preview Modal overlay */}
+      {previewSlip && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-[fadeIn_0.2s_ease]"
+          onClick={() => setPreviewSlip(null)}
+        >
+          <div className="relative w-full max-w-md aspect-[3/4] rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-gray-950" onClick={(e) => e.stopPropagation()}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewSlip}
+              alt="สลิปโอนเงิน"
+              className="w-full h-full object-contain p-2"
+            />
+            <button
+              onClick={() => setPreviewSlip(null)}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center font-bold text-sm shadow transition-colors cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
