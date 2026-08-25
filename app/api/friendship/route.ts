@@ -35,15 +35,8 @@ export async function POST(req: NextRequest) {
       if (slipFile && slipFile.size > 0) {
         const arrayBuffer = await slipFile.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        const filename = Date.now() + "_" + slipFile.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-
-        const { mkdir, writeFile } = await import("fs/promises");
-        const { join } = await import("path");
-        const uploadDir = join(process.cwd(), "public", "slips");
-        await mkdir(uploadDir, { recursive: true });
-        await writeFile(join(uploadDir, filename), buffer);
-
-        slipUrl = "/slips/" + filename;
+        const base64 = buffer.toString("base64");
+        slipUrl = `data:${slipFile.type};base64,${base64}`;
         paymentStatus = "paid";
       }
     }
