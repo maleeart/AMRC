@@ -19,7 +19,7 @@ export default function AdminPage() {
   const [rally, setRally] = useState<Rally[]>([]);
   const [friendship, setFriendship] = useState<Friendship[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Partial<Vote & Rally & Friendship>>({});
+  const [editData, setEditData] = useState<Partial<Vote & Rally & Friendship & { slipFile?: File }>>({});
   const [editError, setEditError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -84,24 +84,36 @@ export default function AdminPage() {
           body: JSON.stringify({ memberId: originalMemberId }),
         });
       }
-      const body = type === "vote"
-        ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
-        : type === "rally"
-        ? { name: editData.name, memberId: editData.member_id, phone: editData.phone }
-        : { 
-            name: editData.name, 
-            memberId: editData.phone, 
-            callsign: editData.callsign, 
-            phone: editData.phone, 
-            optionId: Number(editData.option_id),
-            paymentStatus: editData.payment_status,
-            slipUrl: editData.slip_url
-          };
-      const res = await fetch(`/api/${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      let res;
+      if (type === "friendship") {
+        const formData = new FormData();
+        formData.append("name", editData.name || "");
+        formData.append("memberId", editData.phone || "");
+        formData.append("callsign", editData.callsign || "");
+        formData.append("phone", editData.phone || "");
+        formData.append("optionId", String(editData.option_id || 1));
+        formData.append("paymentStatus", editData.payment_status || "pending");
+        if (editData.slip_url) {
+          formData.append("slipUrl", editData.slip_url);
+        }
+        if (editData.slipFile) {
+          formData.append("slip", editData.slipFile);
+        }
+
+        res = await fetch(`/api/${endpoint}`, {
+          method: "POST",
+          body: formData,
+        });
+      } else {
+        const body = type === "vote"
+          ? { name: editData.name, memberId: editData.member_id, color: editData.color, size: editData.size }
+          : { name: editData.name, memberId: editData.member_id, phone: editData.phone };
+        res = await fetch(`/api/${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+      }
       if (!res.ok) {
         const data = await res.json();
         setEditError(data.error || "เกิดข้อผิดพลาด");
@@ -287,6 +299,19 @@ export default function AdminPage() {
                         <option value="pending">🔴 รอชำระเงิน</option>
                         <option value="paid">🟢 ชำระเงินแล้ว</option>
                       </select>
+                      <div className="space-y-1">
+                        <label className="block text-[10px] font-bold text-gray-500 uppercase">อัปโหลดสลิปการเงินใหม่</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                              setEditData({ ...editData, slipFile: e.target.files[0] });
+                            }
+                          }}
+                          className="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-gray-150 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer border border-gray-200 rounded p-1 bg-white"
+                        />
+                      </div>
                     </>
                   )}
                   {editError && <p className="text-red-500 text-xs text-center">{editError}</p>}

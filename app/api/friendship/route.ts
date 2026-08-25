@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
       callsign = (data.get("callsign") as string) || "";
       phone = (data.get("phone") as string) || "";
       optionId = Number(data.get("optionId"));
+      paymentStatus = (data.get("paymentStatus") as string) || "pending";
+      slipUrl = (data.get("slipUrl") as string) || null;
 
       const slipFile = data.get("slip") as File | null;
       if (slipFile && slipFile.size > 0) {
@@ -43,9 +45,6 @@ export async function POST(req: NextRequest) {
 
         slipUrl = "/slips/" + filename;
         paymentStatus = "paid";
-      } else {
-        paymentStatus = "pending";
-        slipUrl = null;
       }
     }
 
