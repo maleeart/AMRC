@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initFriendshipDB, insertFriendship, deleteFriendship } from "../../../lib/db";
+import { initFriendshipDB, insertFriendship, deleteFriendship, getFriendshipByMemberId } from "../../../lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,21 +23,53 @@ export async function POST(req: NextRequest) {
       slipUrl = body.slipUrl || null;
     } else {
       const data = await req.formData();
-      name = (data.get("name") as string) || "";
-      memberId = (data.get("memberId") as string) || "";
-      callsign = (data.get("callsign") as string) || "";
-      phone = (data.get("phone") as string) || "";
-      optionId = Number(data.get("optionId"));
-      paymentStatus = (data.get("paymentStatus") as string) || "pending";
-      slipUrl = (data.get("slipUrl") as string) || null;
+      const isSlipOnly = data.get("mode") === "slip-only";
 
-      const slipFile = data.get("slip") as File | null;
-      if (slipFile && slipFile.size > 0) {
+      if (isSlipOnly) {
+        phone = (data.get("phone") as string) || "";
+        memberId = phone.trim();
+
+        if (!phone.trim()) {
+          return NextResponse.json({ error: "กรุณากรอกเบอร์โทรศัพท์ที่เคยลงทะเบียน" }, { status: 400 });
+        }
+
+        const slipFile = data.get("slip") as File | null;
+        if (!slipFile || slipFile.size === 0) {
+          return NextResponse.json({ error: "กรุณาแนบไฟล์สลิปโอนเงิน" }, { status: 400 });
+        }
+
+        await initFriendshipDB();
+        const existing = await getFriendshipByMemberId(memberId);
+        if (!existing) {
+          return NextResponse.json({ error: "ไม่พบข้อมูลการลงทะเบียนสำหรับเบอร์โทรศัพท์นี้" }, { status: 404 });
+        }
+
         const arrayBuffer = await slipFile.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         const base64 = buffer.toString("base64");
         slipUrl = `data:${slipFile.type};base64,${base64}`;
         paymentStatus = "paid";
+
+        name = existing.name;
+        callsign = existing.callsign || "";
+        optionId = existing.option_id;
+      } else {
+        name = (data.get("name") as string) || "";
+        memberId = (data.get("memberId") as string) || "";
+        callsign = (data.get("callsign") as string) || "";
+        phone = (data.get("phone") as string) || "";
+        optionId = Number(data.get("optionId"));
+        paymentStatus = (data.get("paymentStatus") as string) || "pending";
+        slipUrl = (data.get("slipUrl") as string) || null;
+
+        const slipFile = data.get("slip") as File | null;
+        if (slipFile && slipFile.size > 0) {
+          const arrayBuffer = await slipFile.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          const base64 = buffer.toString("base64");
+          slipUrl = `data:${slipFile.type};base64,${base64}`;
+          paymentStatus = "paid";
+        }
       }
     }
 

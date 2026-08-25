@@ -123,3 +123,8 @@ export async function isFriendshipMember(memberId: string) {
   return result.length > 0;
 }
 
+export async function getFriendshipByMemberId(memberId: string) {
+  const result = await sql`SELECT name, member_id, callsign, phone, option_id, payment_status, slip_url FROM friendship WHERE member_id = ${memberId} LIMIT 1`;
+  return result[0] || null;
+}
+
