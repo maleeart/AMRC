@@ -64,9 +64,9 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ ok: true });
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    return NextResponse.json({ error: "เกิดข้อผิดพลาดในการบันทึก" }, { status: 500 });
+    return NextResponse.json({ error: `เกิดข้อผิดพลาดในการบันทึก: ${e.message || e}` }, { status: 500 });
   }
 }
 
